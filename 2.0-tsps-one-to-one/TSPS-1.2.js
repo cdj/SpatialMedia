@@ -262,8 +262,9 @@ TSPS.Connection.prototype.onConnectionClosed = function() {};
 
 TSPS.Connection.prototype._onMessageReceived = function( evt ) {
 	var data = evt.data;
+	data = data.replace(/:nan/g, ":0");
 	try {
-		var data =  jQuery.parseJSON( evt.data );	
+		data =  jQuery.parseJSON( data );	
 	} catch(e) {
 		// not valid JSON? Other reasons for error?
 	}
