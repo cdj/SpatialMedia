@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Red Alert</title>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="TSPS-1.2.js"></script>
+<script>
+var socket;
+var tsps;
+var tspsDisp;
+var normalText = "All Systems Go";
+var alertText = "Red Alert";
+var normalTimer;
+
+$(document).ready( function() {
+	// connect with default settings
+	tsps = new TSPS.Connection("localhost", "7681", "tsps-protocol");
+	tsps.connect();
+	
+	// render each time we get a message
+	tsps.onMessageReceived = Moved;
+	//tspsDisp = new TSPS.Dispatcher();
+	tsps.onPersonEntered = test1;
+	tsps.onPersonUpdated = test2;
+	tsps.onPersonMoved = test3;
+	tsps.onPersonLeft = test4;
+	
+	$("#test").text(normalText);	
+});
+
+function test1() {
+	console.log("onPersonEntered");
+}
+
+function test2() {
+	console.log("onPersonUpdated");
+}
+
+function test3() {
+	console.log("onPersonMoved");
+}
+
+function test4() {
+	console.log("onPersonLeft");
+}
+
+function Moved(data) {
+	//console.log(data);
+	var isMoved = false;
+	for (var id in tsps.people){
+		var person = tsps.people[id];
+		if(Math.abs(person.velocity.x) > 20 || Math.abs(person.velocity.y) > 20) {
+			isMoved = true;
+			console.log("[" + id + "] Velocity: x=" + person.velocity.x + ", y=" + person.velocity.y);
+		}
+	}
+	if(isMoved) {
+		if($("body").css("background-color") != "rgb(255, 0, 0)") {
+			console.log("Start red alert");
+			$("body").css("background-color", "red");
+			$("#bridgeNoise")[0].pause();
+			$("#redAlertNoise")[0].play();
+			$("#test").text(alertText);
+		} else {
+			console.log("Continue red alert");
+			clearTimeout(normalTimer);
+		}
+		normalTimer = setTimeout(function(){ SetNormal() }, 4000);
+	}
+}
+
+function SetNormal() {
+	console.log("SetNormal");
+	$("body").css("background-color", "white");
+	$("#bridgeNoise")[0].play();
+	$("#redAlertNoise")[0].pause();
+	$("#test").text(normalText);
+}
+</script>
+<style type="text/css">
+/* http://www.fontspace.com/allen-r-walden/final-frontier-old-style */
+/* http://www.kirsle.net/wizards/ttf2eot.cgi */
+@font-face {
+ font-family: MyCustomFont;
+ src: url("FINALOLD.eot") /* EOT file for IE */
+}
+@font-face {
+ font-family: MyCustomFont;
+ src: url("FINALOLD.TTF") /* TTF file for CSS3 browsers */
+}
+body {
+	font-family: MyCustomFont;
+}
+#test {
+	font-size:100px;
+}
+</style>
+</head>
+
+<body>
+<div style="right:50%; bottom:50%; position:absolute;">
+<div id="test" style="left:50%; top:50%; position:relative;">
+</div>
+</div>
+
+<div style="display:none;">
+	<!-- http://www.trekcore.com/audio/ -->
+	<audio id="bridgeNoise" autoplay="autoplay" loop>
+    	<source src="tos_bridge_9.mp3" type="audio/mpeg">
+    </audio>
+	<audio id="redAlertNoise" loop>
+    	<source src="tos_red_alert.mp3" type="audio/mpeg">
+    </audio>
+</div>
+</body>
+</html>
