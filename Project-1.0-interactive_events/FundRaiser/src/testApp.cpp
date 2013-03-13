@@ -2,6 +2,9 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
+    // connect to tsps
+    tspsReceiver.connect(12000);
+    
     ofSetFrameRate(60);
     ofSetCircleResolution(60);
     ofEnableSmoothing();
@@ -78,6 +81,15 @@ void testApp::update(){
     for (i = strings.begin(); i != strings.end(); i++) {
 
         i->checkPluck(ofGetMouseX(), ofGetMouseY());
+        
+        // get TSPS people
+        vector<ofxTSPS::Person *> people = tspsReceiver.getPeople();
+        
+        // check if people are plucking the string
+        for (int j=0; j<people.size(); j++){
+            i->checkPluck(people[j]->centroid.x*(ofGetWidth() - 150*2)+150,
+                          people[j]->centroid.y*(ofGetHeight() - stringsEdge*2)+stringsEdge);
+        }
         i->update();
     }
     
@@ -126,6 +138,16 @@ void testApp::draw(){
     if ( bDrawBounds ){
         mapper.drawBoundingBox();
     }
+    
+    // get TSPS people
+    vector<ofxTSPS::Person *> people = tspsReceiver.getPeople();
+    
+    // draw boxes where the people are
+    for (int i=0; i<people.size(); i++){
+        ofSetColor( ofColor( ofRandom(255), ofRandom(255), ofRandom(255)));
+        ofRect(people[i]->boundingRect.x*(ofGetWidth() - 150*2)+150, people[i]->boundingRect.y*(ofGetHeight() - stringsEdge*2)+stringsEdge, people[i]->boundingRect.width*(ofGetWidth() - 150*2), people[i]->boundingRect.height*(ofGetHeight() - stringsEdge*2));
+    }
+
 }
 
 //--------------------------------------------------------------

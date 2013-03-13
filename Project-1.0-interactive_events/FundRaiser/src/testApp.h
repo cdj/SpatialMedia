@@ -7,6 +7,7 @@
 #include "Bob.h"
 #include "Spring.h"
 #include <iostream>
+#include "ofxTSPSReceiver.h"
 
 static const int tableSize = 48;
 static const int roomSize = 360;
@@ -67,5 +68,7 @@ class testApp : public ofBaseApp{
     float 	phase;
     float 	phaseAdder;
     float 	phaseAdderTarget;
-
+    
+    // create TSPS Receiver object
+    ofxTSPS::Receiver tspsReceiver;
 };
