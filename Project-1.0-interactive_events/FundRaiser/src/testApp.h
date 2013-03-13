@@ -49,6 +49,10 @@ class testApp : public ofBaseApp{
     bool bDrawBounds;
     bool projectionMode;
     
+    
+    float maxLength;
+    float minLength;
+    
     ofSoundStream soundStream;
     
     float 	pan;

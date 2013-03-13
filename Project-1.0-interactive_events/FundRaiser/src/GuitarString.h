@@ -43,6 +43,9 @@ public:
     
     int lifetime = ofRandom(5, 10);
     int age = 0;
+    
+    float phaseAdder = 0;
+    float phase = 0;
 };
 
 #endif /* defined(__FundRaiser__GuitarString__) */

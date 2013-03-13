@@ -26,6 +26,10 @@ void testApp::setup(){
             tables.push_back( StandingTable::StandingTable( 150 + (i - 9) * tableDist / 2, ofGetHeight() - margin - ( (i - 9) % 2) * tableDist, tableSize, stringsEdge) );
         }
     }
+    
+    maxLength = ofDist(tables[0].dot.x, tables[0].dot.y, tables[17].dot.x, tables[17].dot.y);
+    minLength = ofDist(tables[0].dot.x, tables[0].dot.y, tables[9].dot.x, tables[9].dot.y);
+    
     projectionMode = false;
     
     // Audio setup
@@ -226,23 +230,35 @@ void testApp::audioOut(float * output, int bufferSize, int nChannels){
 	float leftScale = 1 - pan;
 	float rightScale = pan;
     list<GuitarString>::iterator iString;
-    //float maxLength = ofDist(tables[0].dot.x, tables[0].dot.y, tables[tables.size()].dot.x, tables[tables.size()].dot.y);
     
 	// sin (n) seems to have trouble when n is very large, so we
 	// keep phase in the range of 0-TWO_PI like this:
 	while (phase > TWO_PI){
 		phase -= TWO_PI;
 	}
+    //for (iString = strings.begin(); iString != strings.end(); iString++) {
+    //    while (iString->phase > TWO_PI){
+    //        iString->phase -= TWO_PI;
+    //    }
+    //}
     
-    targetFrequency = 2000.0f * 0.5f;
-    phaseAdderTarget = (targetFrequency / (float) sampleRate) * TWO_PI;
+    //targetFrequency = 2000.0f * 0.5f;
+    //phaseAdderTarget = (targetFrequency / (float) sampleRate) * TWO_PI;
     
-    phaseAdder = 0.95f * phaseAdder + 0.05f * phaseAdderTarget;
+    //phaseAdder = 0.95f * phaseAdder + 0.05f * phaseAdderTarget;
 
     for (int i = 0; i < bufferSize; ){
         for (iString = strings.begin(); iString != strings.end(); iString++) {
-            phase += phaseAdder;
+            float baseLength = ofDist(tables[iString->index1].dot.x, tables[iString->index1].dot.y, tables[iString->index2].dot.x, tables[iString->index2].dot.y);
+            targetFrequency = 1600.0f * (1 - (baseLength - minLength)) / (maxLength - minLength) + 400.0f;
+            phaseAdderTarget = (targetFrequency / (float) sampleRate) * TWO_PI;
+            //phaseAdder = 0.95f * phaseAdder + 0.05f * phaseAdderTarget;
+            iString->phaseAdder = 0.95f * iString->phaseAdder + 0.05f * phaseAdderTarget;
+            //phase += phaseAdder;
+            phase += iString->phaseAdder;
+            //iString->phase += iString->phaseAdder;
             float sample = sin(phase);
+            //float sample = sin(iString->phase);
             float volPer = iString->spring.b.velocity.length()/10;
             lAudio[i] = output[i*nChannels    ] = sample * volumeMax * volPer;// * leftScale;
             rAudio[i] = output[i*nChannels + 1] = sample * volumeMax * volPer;// * rightScale;
