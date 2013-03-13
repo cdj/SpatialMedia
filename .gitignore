@@ -3,3 +3,6 @@
 
 *.xcuserstate
 */xcuserdata/*
+
+*/bin/*
+Project-1.0-interactive_events/FundRaiser/bin/*
