@@ -27,16 +27,39 @@ void testApp::setup(){
         }
     }
     projectionMode = false;
+    
+    // Audio setup
+    
+	// 2 output channels,
+	// 0 input channels
+	// 22050 samples per second
+	// 512 samples per buffer
+	// 4 num buffers (latency)
+	
+	int bufferSize		= 512;
+	sampleRate 			= 44100;
+	phase 				= 0;
+	phaseAdder 			= 0.0f;
+	phaseAdderTarget 	= 0.0f;
+	volumeMax				= 0.1f;
+    
+	lAudio.assign(bufferSize, 0.0);
+	rAudio.assign(bufferSize, 0.0);
+    
+	soundStream.setup(this, 2, 0, sampleRate, bufferSize, 4);
+
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
+    // Add new strings
     if (index1 != -1 && index2 != -1) {
         strings.push_back( GuitarString(index1, index2, stringsEdge, tables) );
         index1 = -1;
         index2 = -1;
     }
 
+    // Clean up old strings
     list<GuitarString>::iterator i;
     for (i = strings.begin(); i != strings.end(); ) {
         if (!i->checkLife()) {
@@ -113,13 +136,30 @@ void testApp::keyPressed(int key){
     } else if ( key == 'f' ) {
         ofToggleFullscreen();
     }
+
+    // Audio related keypresses
+	if (key == '-' || key == '_' ){
+		volumeMax -= 0.05;
+		volumeMax = MAX(volumeMax, 0);
+	} else if (key == '+' || key == '=' ){
+		volumeMax += 0.05;
+		volumeMax = MIN(volumeMax, 1);
+	}
+	
+	if( key == 's' ){
+		soundStream.start();
+	}
+	
+	if( key == 'e' ){
+		soundStream.stop();
+	}
 }
 
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
 
 }
-
+    
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
 
@@ -132,6 +172,7 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
+    // Figure out if they have clicked on a table/circle
     for (int i = 0; i < tables.size(); i++) {
         if ((ofGetMouseX() < tables[i].x + tableSize && ofGetMouseX() > tables[i].x - tableSize)
             && (ofGetMouseY() < tables[i].y + tableSize && ofGetMouseY() > tables[i].y - tableSize)) {
@@ -148,7 +189,8 @@ void testApp::mousePressed(int x, int y, int button){
             }
             tables[i].isSelected = true;
             //tables[i].isSelected = !tables[i].isSelected;
-                
+            
+            break;
 
             
         }
@@ -175,4 +217,36 @@ void testApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void testApp::dragEvent(ofDragInfo dragInfo){ 
 
+}
+
+//--------------------------------------------------------------
+// Do the audio output thing
+void testApp::audioOut(float * output, int bufferSize, int nChannels){
+	//pan = 0.5f;
+	float leftScale = 1 - pan;
+	float rightScale = pan;
+    list<GuitarString>::iterator iString;
+    //float maxLength = ofDist(tables[0].dot.x, tables[0].dot.y, tables[tables.size()].dot.x, tables[tables.size()].dot.y);
+    
+	// sin (n) seems to have trouble when n is very large, so we
+	// keep phase in the range of 0-TWO_PI like this:
+	while (phase > TWO_PI){
+		phase -= TWO_PI;
+	}
+    
+    targetFrequency = 2000.0f * 0.5f;
+    phaseAdderTarget = (targetFrequency / (float) sampleRate) * TWO_PI;
+    
+    phaseAdder = 0.95f * phaseAdder + 0.05f * phaseAdderTarget;
+
+    for (int i = 0; i < bufferSize; ){
+        for (iString = strings.begin(); iString != strings.end(); iString++) {
+            phase += phaseAdder;
+            float sample = sin(phase);
+            float volPer = iString->spring.b.velocity.length()/10;
+            lAudio[i] = output[i*nChannels    ] = sample * volumeMax * volPer;// * leftScale;
+            rAudio[i] = output[i*nChannels + 1] = sample * volumeMax * volPer;// * rightScale;
+            i++;
+        }
+    }
 }
