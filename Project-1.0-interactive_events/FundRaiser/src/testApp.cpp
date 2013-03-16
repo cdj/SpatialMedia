@@ -82,6 +82,7 @@ void testApp::update(){
         
         // check if people are plucking the string
         for (int j=0; j<people.size(); j++){
+            // Flipped x-y due to config of camera during installation
             i->checkPluck((1-people[j]->centroid.y)*(ofGetWidth() - 102*2)+102,
                           people[j]->centroid.x*(ofGetHeight() - stringsEdge*2)+stringsEdge);
         }
@@ -128,6 +129,7 @@ void testApp::draw(){
     // draw boxes where the people are
     for (int i=0; i<people.size(); i++){
         ofSetColor( ofColor( ofRandom(255), ofRandom(255), ofRandom(255)));
+        // Flipped x-y due to config of camera during installation
         ofRect((1-people[i]->boundingRect.y)*(ofGetWidth() - 102*2)+102,
                people[i]->boundingRect.x*(ofGetHeight() - stringsEdge*2)+stringsEdge,
                people[i]->boundingRect.height*(ofGetWidth() - 102*2),
