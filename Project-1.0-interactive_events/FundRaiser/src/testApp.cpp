@@ -94,6 +94,8 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     if (projectionMode) {
+        mapper.startMapping();
+        ofClear(0);
         ofTranslate(-102, -1*stringsEdge);
     }
     
@@ -103,32 +105,21 @@ void testApp::draw(){
     // Draw strings
     list<GuitarString>::iterator i;
     for (i = strings.begin(); i != strings.end(); i++) {
-        i->draw();
+        i->draw(projectionMode);
     }
 
     
     // Draw tables
     for (int i = 0; i < tables.size(); i++) {
-        
         if ((ofGetMouseX() < tables[i].x + tableSize && ofGetMouseX() > tables[i].x - tableSize)
             && (ofGetMouseY() < tables[i].y + tableSize && ofGetMouseY() > tables[i].y - tableSize)) {
             tables[i].isHovered = true;
         } else {
             tables[i].isHovered = false;
         }
-        tables[i].draw();
-        
-
-    }
-    
-    if (projectionMode) {
-        //ofTranslate(0, stringsEdge);
-        mapper.startMapping();
-        mapper.stopMapping();
-    }
-    
-    if ( bDrawBounds ){
-        mapper.drawBoundingBox();
+        if (!projectionMode) {
+            tables[i].draw();
+        }
     }
     
     // get TSPS people
@@ -143,6 +134,14 @@ void testApp::draw(){
                people[i]->boundingRect.width*(ofGetHeight() - stringsEdge*2));
     }
 
+    
+    if (projectionMode) {
+        mapper.stopMapping();
+    }
+    
+    if ( bDrawBounds ){
+        mapper.drawBoundingBox();
+    }
 }
 
 //--------------------------------------------------------------
@@ -208,7 +207,7 @@ void testApp::mousePressed(int x, int y, int button){
                 index2 = i;
             }
             tables[i].isSelected = true;
-            break;
+            break; // found the table they clicked on
         }
     }
     
@@ -253,10 +252,11 @@ void testApp::audioOut(float * output, int bufferSize, int nChannels){	float lef
             targetFrequency = 1600.0f * (1 - (baseLength - minLength)) / (maxLength - minLength) + 400.0f;
             phaseAdderTarget = (targetFrequency / (float) sampleRate) * TWO_PI;
             iString->phaseAdder = 0.95f * iString->phaseAdder + 0.05f * phaseAdderTarget;
-            //phase += phaseAdder;
             phase += iString->phaseAdder;
             float sample = sin(phase);
             float volPer = iString->spring.b.velocity.length()/10;
+            lAudio[i] = output[i*nChannels    ] = sample * volumeMax * volPer;
+            rAudio[i] = output[i*nChannels + 1] = sample * volumeMax * volPer;
             i++;
         }
     }
