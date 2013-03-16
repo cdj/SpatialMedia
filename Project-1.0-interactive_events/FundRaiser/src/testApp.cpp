@@ -152,32 +152,37 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-    if (key == 'p') {
-        projectionMode = !projectionMode;
-    } else if ( key == 's' ){
-        // save to a file
-        mapper.save("mapsettings.txt");
-    } else if ( key == 'd' ){
-        bDrawBounds = !bDrawBounds;
-    } else if ( key == 'f' ) {
-        ofToggleFullscreen();
-    }
-
-    // Audio related keypresses
-	if (key == '-' || key == '_' ){
-		volumeMax -= 0.05;
-		volumeMax = MAX(volumeMax, 0);
-	} else if (key == '+' || key == '=' ){
-		volumeMax += 0.05;
-		volumeMax = MIN(volumeMax, 1);
-	}
-	
-	if( key == 's' ){
-		soundStream.start();
-	}
-	
-	if( key == 'e' ){
-		soundStream.stop();
+    switch (key) {
+        case 'p':
+            projectionMode = !projectionMode;
+            break;
+        case 's':
+            // save to a file
+            mapper.save("mapsettings.txt");
+            break;
+        case 'd':
+            bDrawBounds = !bDrawBounds;
+            break;
+        case 'f':
+            ofToggleFullscreen();
+            break;
+        // Audio related keypresses
+        case '-':
+        case '_':
+            volumeMax -= 0.05;
+            volumeMax = MAX(volumeMax, 0);
+            break;
+        case '+':
+        case '=':
+            volumeMax += 0.05;
+            volumeMax = MIN(volumeMax, 1);
+            break;
+        case 'a':
+            soundStream.start();
+            break;
+        case 'z':
+            soundStream.stop();
+            break;
 	}
 }
 
