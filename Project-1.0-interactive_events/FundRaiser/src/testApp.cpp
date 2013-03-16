@@ -8,8 +8,6 @@ void testApp::setup(){
     ofSetFrameRate(60);
     ofSetCircleResolution(60);
     ofEnableSmoothing();
-    //ofSetWindowShape(roomSize * makeBigger, roomSize * makeBigger);
-    
     ofClear(0);
     mapper.initialize(ofGetWidth(), ofGetHeight() - 2 * stringsEdge);
     mapper.load("mapsettings.txt");
@@ -202,22 +200,12 @@ void testApp::mousePressed(int x, int y, int button){
         if ((ofGetMouseX() < tables[i].x + tableSize && ofGetMouseX() > tables[i].x - tableSize)
             && (ofGetMouseY() < tables[i].y + tableSize && ofGetMouseY() > tables[i].y - tableSize)) {
             if (i < 9) {
-//                if (index1 != -1) {
-//                    tables[index1].isSelected = false;
-//                }
                 index1 = i;
             } else {
-//                if (index2 != -1) {
-//                    tables[index2].isSelected = false;
-//                }
                 index2 = i;
             }
             tables[i].isSelected = true;
-            //tables[i].isSelected = !tables[i].isSelected;
-            
             break;
-
-            
         }
     }
     
@@ -246,9 +234,7 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 
 //--------------------------------------------------------------
 // Do the audio output thing
-void testApp::audioOut(float * output, int bufferSize, int nChannels){
-	//pan = 0.5f;
-	float leftScale = 1 - pan;
+void testApp::audioOut(float * output, int bufferSize, int nChannels){	float leftScale = 1 - pan;
 	float rightScale = pan;
     list<GuitarString>::iterator iString;
     
@@ -257,32 +243,17 @@ void testApp::audioOut(float * output, int bufferSize, int nChannels){
 	while (phase > TWO_PI){
 		phase -= TWO_PI;
 	}
-    //for (iString = strings.begin(); iString != strings.end(); iString++) {
-    //    while (iString->phase > TWO_PI){
-    //        iString->phase -= TWO_PI;
-    //    }
-    //}
     
-    //targetFrequency = 2000.0f * 0.5f;
-    //phaseAdderTarget = (targetFrequency / (float) sampleRate) * TWO_PI;
-    
-    //phaseAdder = 0.95f * phaseAdder + 0.05f * phaseAdderTarget;
-
     for (int i = 0; i < bufferSize; ){
         for (iString = strings.begin(); iString != strings.end(); iString++) {
             float baseLength = ofDist(tables[iString->index1].dot.x, tables[iString->index1].dot.y, tables[iString->index2].dot.x, tables[iString->index2].dot.y);
             targetFrequency = 1600.0f * (1 - (baseLength - minLength)) / (maxLength - minLength) + 400.0f;
             phaseAdderTarget = (targetFrequency / (float) sampleRate) * TWO_PI;
-            //phaseAdder = 0.95f * phaseAdder + 0.05f * phaseAdderTarget;
             iString->phaseAdder = 0.95f * iString->phaseAdder + 0.05f * phaseAdderTarget;
             //phase += phaseAdder;
             phase += iString->phaseAdder;
-            //iString->phase += iString->phaseAdder;
             float sample = sin(phase);
-            //float sample = sin(iString->phase);
             float volPer = iString->spring.b.velocity.length()/10;
-            lAudio[i] = output[i*nChannels    ] = sample * volumeMax * volPer;// * leftScale;
-            rAudio[i] = output[i*nChannels + 1] = sample * volumeMax * volPer;// * rightScale;
             i++;
         }
     }
