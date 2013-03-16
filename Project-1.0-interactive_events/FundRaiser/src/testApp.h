@@ -46,7 +46,6 @@ class testApp : public ofBaseApp{
     Spring spring;
     
     ofxSimpleProjectionMapper mapper;
-    ofFbo canvas;
     bool bDrawBounds;
     bool projectionMode;
     

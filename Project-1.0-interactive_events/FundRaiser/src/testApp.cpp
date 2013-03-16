@@ -10,10 +10,7 @@ void testApp::setup(){
     ofEnableSmoothing();
     //ofSetWindowShape(roomSize * makeBigger, roomSize * makeBigger);
     
-    canvas.allocate(ofGetWidth(), ofGetHeight() - 2 * stringsEdge);
-    canvas.begin();
     ofClear(0);
-    canvas.end();
     mapper.initialize(ofGetWidth(), ofGetHeight() - 2 * stringsEdge);
     mapper.load("mapsettings.txt");
     bDrawBounds = false;
@@ -99,7 +96,6 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     if (projectionMode) {
-        canvas.begin();
         ofTranslate(0, -stringsEdge);
     }
     
@@ -128,10 +124,8 @@ void testApp::draw(){
     }
     
     if (projectionMode) {
-        canvas.end();
         //ofTranslate(0, stringsEdge);
         mapper.startMapping();
-        canvas.draw(0,0);
         mapper.stopMapping();
     }
     
