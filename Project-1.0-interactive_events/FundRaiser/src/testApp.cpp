@@ -9,7 +9,7 @@ void testApp::setup(){
     ofSetCircleResolution(60);
     ofEnableSmoothing();
     ofClear(0);
-    mapper.initialize(ofGetWidth(), ofGetHeight() - 2 * stringsEdge);
+    mapper.initialize(ofGetWidth() - 102 * 2, ofGetHeight() - 2 * stringsEdge, 102, stringsEdge);
     mapper.load("mapsettings.txt");
     bDrawBounds = false;
     
@@ -82,8 +82,8 @@ void testApp::update(){
         
         // check if people are plucking the string
         for (int j=0; j<people.size(); j++){
-            i->checkPluck(people[j]->centroid.x*(ofGetWidth() - 150*2)+150,
-                          people[j]->centroid.y*(ofGetHeight() - stringsEdge*2)+stringsEdge);
+            i->checkPluck((1-people[j]->centroid.y)*(ofGetWidth() - 102*2)+102,
+                          people[j]->centroid.x*(ofGetHeight() - stringsEdge*2)+stringsEdge);
         }
         i->update();
     }
@@ -94,7 +94,7 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     if (projectionMode) {
-        ofTranslate(0, -stringsEdge);
+        ofTranslate(-102, -1*stringsEdge);
     }
     
     
@@ -137,7 +137,10 @@ void testApp::draw(){
     // draw boxes where the people are
     for (int i=0; i<people.size(); i++){
         ofSetColor( ofColor( ofRandom(255), ofRandom(255), ofRandom(255)));
-        ofRect(people[i]->boundingRect.x*(ofGetWidth() - 150*2)+150, people[i]->boundingRect.y*(ofGetHeight() - stringsEdge*2)+stringsEdge, people[i]->boundingRect.width*(ofGetWidth() - 150*2), people[i]->boundingRect.height*(ofGetHeight() - stringsEdge*2));
+        ofRect((1-people[i]->boundingRect.y)*(ofGetWidth() - 102*2)+102,
+               people[i]->boundingRect.x*(ofGetHeight() - stringsEdge*2)+stringsEdge,
+               people[i]->boundingRect.height*(ofGetWidth() - 102*2),
+               people[i]->boundingRect.width*(ofGetHeight() - stringsEdge*2));
     }
 
 }
