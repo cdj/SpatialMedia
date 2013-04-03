@@ -3,6 +3,7 @@
 //  FundRaiser
 //
 //  Created by Xinran Wang on 3/11/13.
+//   Modified by Carl Jamilkowski
 //
 //
 

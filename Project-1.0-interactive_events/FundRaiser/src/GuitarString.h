@@ -3,6 +3,7 @@
 //  FundRaiser
 //
 //  Created by Xinran Wang on 3/8/13.
+//   Modified by Carl Jamilkowski
 //
 //
 
@@ -32,10 +33,8 @@ public:
     ofPolyline string;
     ofPolyline hiddenString;
     ofMesh mesh;
-    //ofPoint controlPoint;
     vector<StandingTable> tables;
     
-    //Bob bob;
     Spring spring;
     ofVec2f gravity;
     float pluckDist = 20;

@@ -36,7 +36,6 @@ class testApp : public ofBaseApp{
         void audioOut(float * input, int bufferSize, int nChannels);
     
     vector<StandingTable> tables;
-    //vector<GuitarString> strings;
     list<GuitarString> strings;
     
     int index1 = -1;
@@ -53,6 +52,7 @@ class testApp : public ofBaseApp{
     float maxLength;
     float minLength;
     
+    // Audio related vars
     ofSoundStream soundStream;
     
     float 	pan;
@@ -62,7 +62,6 @@ class testApp : public ofBaseApp{
     vector <float> lAudio;
     vector <float> rAudio;
     
-    //------------------- for the simple sine wave synthesis
     float 	targetFrequency;
     float 	phase;
     float 	phaseAdder;

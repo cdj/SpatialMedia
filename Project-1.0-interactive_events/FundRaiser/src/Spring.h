@@ -3,6 +3,7 @@
 //  FundRaiser
 //
 //  Created by Xinran Wang on 3/11/13.
+//   Modified by Carl Jamilkowski
 //
 //
 
@@ -17,8 +18,6 @@ class Spring {
 public:
     Spring();
     Spring(float x, float y, int l, float _minlen, float _maxlen, Bob _b);
-//    void connect(Bob b);
-//    void constrainLength(Bob b, float minlen, float maxlen);
     void display();
     
     void update(float mx, float my);

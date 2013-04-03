@@ -3,6 +3,7 @@
 //  FundRaiser
 //
 //  Created by Xinran Wang on 3/8/13.
+//   Modified by Carl Jamilkowski
 //
 //
 
@@ -48,18 +49,13 @@ void GuitarString::checkPluck(float _x, float _y) {
         spring.b.location.set(_x, _y);
         spring.anchor.set(closestPoint);
         spring.b.clicked(_x, _y);
-        
-        //age++;
     } else {
         spring.b.stopDragging();
         if (prePluck) {
             age++;
             prePluck = false;
         }
-        
     }
-
-
 }
 
 bool GuitarString::checkLife() {
@@ -130,6 +126,4 @@ void GuitarString::draw(bool isProjectionMode) {
     }
 
     mesh.draw();
-//    spring.b.display();
-//    spring.display();
 }
