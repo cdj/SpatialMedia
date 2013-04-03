@@ -10,3 +10,6 @@ Address one of your technical challenges with a prototype. This might include th
 For the first prototype, build a simple one-to-one interaction with TSPS. Think about how the output, placement of the camera, and type of data you’re looking for can all reinforce the nature of the interaction.
 ### 2.0 Prototype: Many-to-one interaction with TSPS
 The second TSPS prototype should be a many-to-one interactive: at least three people must be able to interact with a single output at once.
+
+### Project 1.0 Prototype: Interactive Events
+An interactive installation for a fundraising event
