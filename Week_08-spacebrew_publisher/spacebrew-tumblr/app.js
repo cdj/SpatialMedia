@@ -57,8 +57,7 @@ var tumblr = new Tumblr(
 /*
   You can get the consumerKey by registing a tumblr app: http://www.tumblr.com/oauth/apps
 */
-    //consumerKey: 'your consumer key'
-    consumerKey: '1J21CbwmlgsgRnVGYMgiSY3Gqc03PzYGDHzYp92m7CDhsTjY2c'
+    consumerKey: 'your consumer key'
   }
 );
 
