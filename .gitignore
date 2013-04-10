@@ -1,8 +1,9 @@
-
-2_0_tsps_many_to_one/bin/*
-
 *.xcuserstate
 */xcuserdata/*
 
+*.npmignore
+
 */bin/*
+*/.bin/*
+
 Project-1.0-interactive_events/FundRaiser/bin/*
