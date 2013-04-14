@@ -62,18 +62,18 @@ var tumblr = new Tumblr(
 );
 
 
-// Get 5 new posts every 15 seconds
-// 	If we've seen the posts before, get older ones we haven't seen yet
-// 	Send out blog names and photo URLs (if they are photo posts) to Spacebrew
+// Get 1 new post every 3 seconds
+// 	If we've seen the post before, get older one we haven't seen yet
+// 	Send out blog name and photo URL (if a photo post) to Spacebrew
 setInterval(function(){
-	var postsToGet = 5;
+	var postsToGet = 1;
 	console.log("======");
 	console.log("--- Getting "+postsToGet+" posts ---");
 	tumblr.get('/tagged', {tag: tumblrTag, filter: 'text', limit: postsToGet}, function(json){
 		console.log("+++ "+json.length+" posts found +++");
 		for (var i = 0; i < json.length; i++) {
 			if (JSON.stringify(json[i]) == latestPost) {
-				console.log("*** Reached latest post ***");
+				console.log("*** Reached latest post, "+postsToGet+" remaining  ***");
 				break;
 			}
 			if (json.type == "photo") {
@@ -97,7 +97,7 @@ setInterval(function(){
 			}
 		}
 	});
-}, 15000);
+}, 3000);
 
 // Send out blog name and photo URL (if it is a photo post) to Spacebrew
 function SendToSpacebrew(json) {
