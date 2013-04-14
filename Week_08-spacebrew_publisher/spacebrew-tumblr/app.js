@@ -76,8 +76,10 @@ setInterval(function(){
 				console.log("*** Reached latest post ***");
 				break;
 			}
-			SendToSpacebrew(json[i]);
-			postsToGet--;
+			if (json.type == "photo") {
+				SendToSpacebrew(json[i]);
+				postsToGet--;
+			}
 		}
 		latestPost = JSON.stringify(json[0]);
 		if(oldestTimestamp == 0) { // first time running
