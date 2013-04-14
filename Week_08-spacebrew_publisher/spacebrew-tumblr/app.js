@@ -103,13 +103,9 @@ setInterval(function(){
 function SendToSpacebrew(json) {
 	if(sb._isConnected) {
 		sb.send("BlogName", "string", json.blog_name);
-		//console.log("* Blog = "+json.blog_name);
 
 		if (json.type == "photo") {
-			//console.log("* URL = "+json.photos[0].alt_sizes[0].url);
 			sb.send("PhotoUrl", "string", json.photos[0].alt_sizes[0].url);
-		} else {
-			//console.log("** Not a photo; post type is "+json.type);
 		}
 	}
 }
